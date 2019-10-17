@@ -1,61 +1,79 @@
 import React from 'react';
 import EditTimeSlotModal from '../EditTimeSlotModal/EditTimeSlotModal';
 import TimeSlotList from '../TimeSlotList/TimeSlotList';
+import {
+  getAppointments,
+  createAppointment,
+  updateAppointment,
+  deleteAppointment,
+} from '../../services/appointments';
 
 import './App.css';
 
 class App extends React.Component {
 
   state = {
-    appointments: [
-      {
-        id: 1,
-        hour: 9,
-        name: 'Alice',
-        phoneNumber: '1111111111',
-      },
-      {
-        id: 2,
-        hour: 12,
-        name: 'Bob',
-        phoneNumber: '2222222222',
-      },
-      {
-        id: 3,
-        hour: 17,
-        name: 'Charlie',
-        phoneNumber: '3333333333',
-      },
-    ],
+    appointments: [],
     editingTimeSlot: null
   };
+
+  componentDidMount = () => {
+
+    return getAppointments()
+      .then(appointments => {
+        this.setState({ appointments });
+      })
+      .catch(err => {
+        // TODO real error handling
+        console.log(err);
+      });
+  }
 
   handleEditTimeSlotModalSave = (appointment) => {
 
     if (appointment.id) {
 
-      const newAppointments = this.state.appointments.map(a => {
+      const { id, ...payload } = appointment;
 
-        if (a.id === appointment.id) {
-          return appointment;
-        }
+      return updateAppointment(id, payload)
+        .then(() => {
 
-        return a;
-      });
+          const newAppointments = this.state.appointments.map(a => {
 
-      this.setState({
-        appointments: newAppointments,
-        editingTimeSlot: null
-      });
+            if (a.id === appointment.id) {
+              return appointment;
+            }
+
+            return a;
+          });
+
+          this.setState({
+            appointments: newAppointments,
+            editingTimeSlot: null
+          });
+
+        })
+        .catch(err => {
+          // TODO real error handling
+          console.log(err);
+        });
 
     } else {
 
-      appointment.id = this.state.appointments.length + 1;
+      const { id, ...payload } = appointment;
 
-      this.setState({
-        appointments: [...this.state.appointments, appointment],
-        editingTimeSlot: null
-      });
+      return createAppointment(payload)
+        .then((appointment) => {
+
+          this.setState({
+            appointments: [...this.state.appointments, appointment],
+            editingTimeSlot: null
+          });
+        })
+        .catch(err => {
+          // TODO real error handling
+          console.log(err);
+        });
     }
   }
 
@@ -65,14 +83,22 @@ class App extends React.Component {
 
   handleEditTimeSlotModalDelete = (appointmentId) => {
 
-    const newAppointments = this.state.appointments.filter(a => {
-      return a.id !== appointmentId;
-    });
+    return deleteAppointment(appointmentId)
+      .then(() => {
 
-    this.setState({
-      appointments: newAppointments,
-      editingTimeSlot: null,
-    });
+        const newAppointments = this.state.appointments.filter(a => {
+          return a.id !== appointmentId;
+        });
+
+        this.setState({
+          appointments: newAppointments,
+          editingTimeSlot: null,
+        });
+      })
+      .catch(err => {
+        // TODO real error handling
+        console.log(err);
+      });
   };
 
   handleTimeSlotListEdit = (hour) => {
@@ -115,7 +141,7 @@ class App extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 }
 
 export default App;
