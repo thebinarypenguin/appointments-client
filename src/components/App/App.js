@@ -28,6 +28,39 @@ class App extends React.Component {
     editingTimeSlot: null
   };
 
+  handleEditTimeSlotModalSave = (appointment) => {
+
+    if (appointment.id) {
+
+      const newAppointments = this.state.appointments.map(a => {
+
+        if (a.id === appointment.id) {
+          return appointment;
+        }
+
+        return a;
+      });
+
+      this.setState({
+        appointments: newAppointments,
+        editingTimeSlot: null
+      });
+
+    } else {
+
+      appointment.id = this.state.appointments.length + 1;
+
+      this.setState({
+        appointments: [...this.state.appointments, appointment],
+        editingTimeSlot: null
+      });
+    }
+  }
+
+  handleEditTimeSlotModalCancel = () => {
+    this.setState({ editingTimeSlot: null });
+  }
+
   handleTimeSlotListEdit = (hour) => {
     this.setState({ editingTimeSlot: hour });
   };
@@ -35,9 +68,19 @@ class App extends React.Component {
   render = () => {
 
     if (this.state.editingTimeSlot) {
+
+      const appointment = this.state.appointments.find(a => {
+        return a.hour === this.state.editingTimeSlot}
+      );
+
       return (
         <div className="App">
-          <EditTimeSlotModal />
+          <EditTimeSlotModal
+            hour={this.state.editingTimeSlot}
+            appointment={appointment}
+            onSave={this.handleEditTimeSlotModalSave}
+            onCancel={this.handleEditTimeSlotModalCancel}
+          />
         </div>
       );
     }
