@@ -61,6 +61,18 @@ class App extends React.Component {
     this.setState({ editingTimeSlot: null });
   }
 
+  handleEditTimeSlotModalDelete = (appointmentId) => {
+
+    const newAppointments = this.state.appointments.filter(a => {
+      return a.id !== appointmentId;
+    });
+
+    this.setState({
+      appointments: newAppointments,
+      editingTimeSlot: null,
+    });
+  };
+
   handleTimeSlotListEdit = (hour) => {
     this.setState({ editingTimeSlot: hour });
   };
@@ -80,6 +92,7 @@ class App extends React.Component {
             appointment={appointment}
             onSave={this.handleEditTimeSlotModalSave}
             onCancel={this.handleEditTimeSlotModalCancel}
+            onDelete={this.handleEditTimeSlotModalDelete}
           />
         </div>
       );

@@ -2,8 +2,6 @@ import React from 'react';
 
 function EditTimeSlotModal(props) {
 
-  // hour,appointment,onSave,onCancel
-
   const handleFormSubmit = (ev) => {
 
     ev.preventDefault();
@@ -24,8 +22,8 @@ function EditTimeSlotModal(props) {
     props.onCancel();
   }
 
-  if (props.appointment) {
-
+  const handleDeleteClick = () => {
+    props.onDelete(props.appointment.id);
   }
 
   const defaultName = (props.appointment) ? props.appointment.name : null;
@@ -38,6 +36,9 @@ function EditTimeSlotModal(props) {
       <form onSubmit={handleFormSubmit}>
         <input type="text" id="name" name="name" defaultValue={defaultName} />
         <input type="text" id="phoneNumber" name="phoneNumber" defaultValue={defaultPhoneNumber} />
+
+        { props.appointment && <button type="button" onClick={handleDeleteClick}>Delete</button> }
+
         <button type="button" onClick={handleCancelClick} >Cancel</button>
         <button type="submit">Save</button>
       </form>
