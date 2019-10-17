@@ -1,11 +1,58 @@
 import React from 'react';
+import EditTimeSlotModal from '../EditTimeSlotModal/EditTimeSlotModal';
+import TimeSlotList from '../TimeSlotList/TimeSlotList';
 
-function App() {
-  return (
-    <div className="App">
-      <h1>App</h1>
-    </div>
-  );
+class App extends React.Component {
+
+  state = {
+    appointments: [
+      {
+        id: 1,
+        hour: 9,
+        name: 'Alice',
+        phoneNumber: '1111111111',
+      },
+      {
+        id: 2,
+        hour: 12,
+        name: 'Bob',
+        phoneNumber: '2222222222',
+      },
+      {
+        id: 3,
+        hour: 17,
+        name: 'Charlie',
+        phoneNumber: '3333333333',
+      },
+    ],
+    editingTimeSlot: null
+  };
+
+  handleTimeSlotListEdit = (hour) => {
+    this.setState({ editingTimeSlot: hour });
+  };
+
+  render = () => {
+
+    if (this.state.editingTimeSlot) {
+      return (
+        <div className="App">
+          <EditTimeSlotModal />
+        </div>
+      );
+    }
+
+    return (
+      <div className="App">
+        <TimeSlotList
+          startHour={9}
+          endHour={17}
+          appointments={this.state.appointments}
+          onEdit={this.handleTimeSlotListEdit}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
