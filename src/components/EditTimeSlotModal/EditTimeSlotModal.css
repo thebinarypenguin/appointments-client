@@ -1,0 +1,12 @@
+.EditTimeSlotModal form {
+  text-align: left;
+}
+
+.EditTimeSlotModal .FormControls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.EditTimeSlotModal .FormControls .right button:last-child {
+  margin-left: 15px;
+}

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './EditTimeSlotModal.css';
+
 function EditTimeSlotModal(props) {
 
   const handleFormSubmit = (ev) => {
@@ -34,13 +36,29 @@ function EditTimeSlotModal(props) {
       <h1>Editing Time Slot {props.hour}</h1>
 
       <form onSubmit={handleFormSubmit}>
-        <input type="text" id="name" name="name" defaultValue={defaultName} />
-        <input type="text" id="phoneNumber" name="phoneNumber" defaultValue={defaultPhoneNumber} />
 
-        { props.appointment && <button type="button" onClick={handleDeleteClick}>Delete</button> }
 
-        <button type="button" onClick={handleCancelClick} >Cancel</button>
-        <button type="submit">Save</button>
+
+        <div className="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" className="form-control" name="name" defaultValue={defaultName} />
+        </div>
+
+        <div className="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input type="tel" id="phoneNumber" className="form-control" name="phoneNumber" defaultValue={defaultPhoneNumber} />
+        </div>
+
+        <div className="FormControls">
+          <div className="left">
+            { props.appointment && <button type="button" onClick={handleDeleteClick}>Delete</button> }
+          </div>
+
+          <div className="right">
+            <button type="button" onClick={handleCancelClick} >Cancel</button>
+            <button type="submit">Save</button>
+          </div>
+        </div>
       </form>
     </div>
   );

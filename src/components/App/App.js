@@ -2,6 +2,8 @@ import React from 'react';
 import EditTimeSlotModal from '../EditTimeSlotModal/EditTimeSlotModal';
 import TimeSlotList from '../TimeSlotList/TimeSlotList';
 
+import './App.css';
+
 class App extends React.Component {
 
   state = {
@@ -86,26 +88,31 @@ class App extends React.Component {
       );
 
       return (
-        <div className="App">
-          <EditTimeSlotModal
-            hour={this.state.editingTimeSlot}
-            appointment={appointment}
-            onSave={this.handleEditTimeSlotModalSave}
-            onCancel={this.handleEditTimeSlotModalCancel}
-            onDelete={this.handleEditTimeSlotModalDelete}
-          />
+        <div className="App card">
+          <div className="card-body">
+            <EditTimeSlotModal
+              hour={this.state.editingTimeSlot}
+              appointment={appointment}
+              onSave={this.handleEditTimeSlotModalSave}
+              onCancel={this.handleEditTimeSlotModalCancel}
+              onDelete={this.handleEditTimeSlotModalDelete}
+            />
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="App">
-        <TimeSlotList
-          startHour={9}
-          endHour={17}
-          appointments={this.state.appointments}
-          onEdit={this.handleTimeSlotListEdit}
-        />
+      <div className="App card">
+        <div className="card-body">
+          <h1>Appointments</h1>
+          <TimeSlotList
+            startHour={9}
+            endHour={17}
+            appointments={this.state.appointments}
+            onEdit={this.handleTimeSlotListEdit}
+          />
+        </div>
       </div>
     );
   }
