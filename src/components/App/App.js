@@ -14,18 +14,18 @@ class App extends React.Component {
 
   state = {
     appointments: [],
-    editingTimeSlot: null
+    editingTimeSlot: null,
+    error: null,
   };
 
   componentDidMount = () => {
 
     return getAppointments()
       .then(appointments => {
-        this.setState({ appointments });
+        this.setState({ appointments, error: null });
       })
       .catch(err => {
-        // TODO real error handling
-        console.log(err);
+        this.setState({ error: err });
       });
   }
 
@@ -49,13 +49,13 @@ class App extends React.Component {
 
           this.setState({
             appointments: newAppointments,
-            editingTimeSlot: null
+            editingTimeSlot: null,
+            error: null,
           });
 
         })
         .catch(err => {
-          // TODO real error handling
-          console.log(err);
+          this.setState({ error: err });
         });
 
     } else {
@@ -67,18 +67,18 @@ class App extends React.Component {
 
           this.setState({
             appointments: [...this.state.appointments, appointment],
-            editingTimeSlot: null
+            editingTimeSlot: null,
+            error: null,
           });
         })
         .catch(err => {
-          // TODO real error handling
-          console.log(err);
+          this.setState({ error: err });
         });
     }
   }
 
   handleEditTimeSlotModalCancel = () => {
-    this.setState({ editingTimeSlot: null });
+    this.setState({ editingTimeSlot: null, error: null });
   }
 
   handleEditTimeSlotModalDelete = (appointmentId) => {
@@ -93,19 +93,28 @@ class App extends React.Component {
         this.setState({
           appointments: newAppointments,
           editingTimeSlot: null,
+          error: null,
         });
       })
       .catch(err => {
-        // TODO real error handling
-        console.log(err);
+        this.setState({ error: err });
       });
   };
 
   handleTimeSlotListEdit = (hour) => {
-    this.setState({ editingTimeSlot: hour });
+    this.setState({ editingTimeSlot: hour, error: null });
   };
 
   render = () => {
+
+    let errorMessage = null;
+    if (this.state.error) {
+      errorMessage = (
+        <div className="alert alert-danger">
+          {this.state.error.message}
+        </div>
+      );
+    }
 
     if (this.state.editingTimeSlot) {
 
@@ -116,6 +125,7 @@ class App extends React.Component {
       return (
         <div className="App card">
           <div className="card-body">
+            { errorMessage }
             <EditTimeSlotModal
               hour={this.state.editingTimeSlot}
               appointment={appointment}
@@ -131,6 +141,7 @@ class App extends React.Component {
     return (
       <div className="App card">
         <div className="card-body">
+          { errorMessage }
           <h1>Appointments</h1>
           <TimeSlotList
             startHour={9}
