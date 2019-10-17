@@ -28,24 +28,27 @@ function EditTimeSlotModal(props) {
     props.onDelete(props.appointment.id);
   }
 
+  let suffix = (props.hour > 11) ? 'pm' : 'am';
+  let time = (props.hour > 12) ? props.hour - 12 : props.hour;
+
   const defaultName = (props.appointment) ? props.appointment.name : null;
   const defaultPhoneNumber = (props.appointment) ? props.appointment.phoneNumber : null;
 
   return (
     <div className="EditTimeSlotModal">
-      <h1>Editing Time Slot {props.hour}</h1>
+      <h1>Appointment at {time + suffix}</h1>
 
       <form onSubmit={handleFormSubmit}>
 
 
 
         <div className="form-group">
-          <label for="name">Name</label>
+          <label htmlFor="name">Name</label>
           <input type="text" id="name" className="form-control" name="name" defaultValue={defaultName} />
         </div>
 
         <div className="form-group">
-          <label for="phoneNumber">Phone Number</label>
+          <label htmlFor="phoneNumber">Phone Number</label>
           <input type="tel" id="phoneNumber" className="form-control" name="phoneNumber" defaultValue={defaultPhoneNumber} />
         </div>
 
