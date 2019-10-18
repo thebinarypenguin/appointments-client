@@ -1,6 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import EditTimeSlotModal from '../EditTimeSlotModal/EditTimeSlotModal';
 import TimeSlotList from '../TimeSlotList/TimeSlotList';
+import {
+  loadAppointments,
+} from '../../redux/actionCreators';
 import {
   getAppointments,
   createAppointment,
@@ -19,14 +23,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-
-    return getAppointments()
-      .then(appointments => {
-        this.setState({ appointments, error: null });
-      })
-      .catch(err => {
-        this.setState({ error: err });
-      });
+    this.props.loadAppointments();
   }
 
   handleEditTimeSlotModalSave = (appointment) => {
@@ -108,17 +105,17 @@ class App extends React.Component {
   render = () => {
 
     let errorMessage = null;
-    if (this.state.error) {
+    if (this.props.error) {
       errorMessage = (
         <div className="alert alert-danger">
-          {this.state.error.message}
+          {this.props.error.message}
         </div>
       );
     }
 
     if (this.state.editingTimeSlot) {
 
-      const appointment = this.state.appointments.find(a => {
+      const appointment = this.props.appointments.find(a => {
         return a.hour === this.state.editingTimeSlot}
       );
 
@@ -146,7 +143,7 @@ class App extends React.Component {
           <TimeSlotList
             startHour={9}
             endHour={17}
-            appointments={this.state.appointments}
+            appointments={this.props.appointments}
             onEdit={this.handleTimeSlotListEdit}
           />
         </div>
@@ -155,4 +152,17 @@ class App extends React.Component {
   };
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    appointments    : state.appointments,
+    editingTimeSlot : state.editingTimeSlot,
+    error           : state.error,
+  }
+}
+
+const mapDispatchToProps = { loadAppointments }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)
