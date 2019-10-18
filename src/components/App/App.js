@@ -15,82 +15,21 @@ import './App.css';
 
 class App extends React.Component {
 
-  state = {
-    appointments: [],
-    editingTimeSlot: null,
-    error: null,
-  };
-
   componentDidMount = () => {
     this.props.loadAppointments();
   }
 
   handleEditTimeSlotModalSave = (appointment) => {
 
-    if (appointment.id) {
+    // This should be moved into action creators
 
-      const { id, ...payload } = appointment;
+    const { id, ...payload } = appointment;
 
-      return updateAppointment(id, payload)
-        .then(() => {
-
-          const newAppointments = this.state.appointments.map(a => {
-
-            if (a.id === appointment.id) {
-              return appointment;
-            }
-
-            return a;
-          });
-
-          this.setState({
-            appointments: newAppointments,
-            editingTimeSlot: null,
-            error: null,
-          });
-
-        })
-        .catch(err => {
-          this.setState({ error: err });
-        });
-
+    if (id) {
+      this.props.updateAppointment(id, payload)
     } else {
-
-      const { id, ...payload } = appointment;
-
-      return createAppointment(payload)
-        .then((appointment) => {
-
-          this.setState({
-            appointments: [...this.state.appointments, appointment],
-            editingTimeSlot: null,
-            error: null,
-          });
-        })
-        .catch(err => {
-          this.setState({ error: err });
-        });
+      this.props.createAppointment(payload);
     }
-  }
-
-  handleEditTimeSlotModalDelete = (appointmentId) => {
-
-    return deleteAppointment(appointmentId)
-      .then(() => {
-
-        const newAppointments = this.state.appointments.filter(a => {
-          return a.id !== appointmentId;
-        });
-
-        this.setState({
-          appointments: newAppointments,
-          editingTimeSlot: null,
-          error: null,
-        });
-      })
-      .catch(err => {
-        this.setState({ error: err });
-      });
   };
 
   render = () => {
@@ -120,7 +59,7 @@ class App extends React.Component {
               appointment={appointment}
               onSave={this.handleEditTimeSlotModalSave}
               onCancel={this.props.hideEditAppointmentModal}
-              onDelete={this.handleEditTimeSlotModalDelete}
+              onDelete={this.props.deleteAppointment}
             />
           </div>
         </div>
