@@ -1,5 +1,7 @@
 import {
   LOAD_APPOINTMENTS,
+  SHOW_EDIT_APPOINTMENT_MODAL,
+  HIDE_EDIT_APPOINTMENT_MODAL,
   SET_ERROR,
 } from './actionTypes';
 
@@ -17,6 +19,20 @@ const rootReducer = (state = initialState, action) => {
       return {
         appointments: [...action.appointments],
         editingTimeSlot: state.editingTimeSlot,
+        error: null,
+      };
+
+    case SHOW_EDIT_APPOINTMENT_MODAL:
+      return {
+        appointments: [...state.appointments],
+        editingTimeSlot: action.hour,
+        error: null,
+      };
+
+    case HIDE_EDIT_APPOINTMENT_MODAL:
+      return {
+        appointments: [...state.appointments],
+        editingTimeSlot: null,
         error: null,
       };
 

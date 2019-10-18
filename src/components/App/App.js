@@ -4,13 +4,12 @@ import EditTimeSlotModal from '../EditTimeSlotModal/EditTimeSlotModal';
 import TimeSlotList from '../TimeSlotList/TimeSlotList';
 import {
   loadAppointments,
-} from '../../redux/actionCreators';
-import {
-  getAppointments,
   createAppointment,
-  updateAppointment,
   deleteAppointment,
-} from '../../services/appointments';
+  updateAppointment,
+  showEditAppointmentModal,
+  hideEditAppointmentModal,
+} from '../../redux/actionCreators';
 
 import './App.css';
 
@@ -74,10 +73,6 @@ class App extends React.Component {
     }
   }
 
-  handleEditTimeSlotModalCancel = () => {
-    this.setState({ editingTimeSlot: null, error: null });
-  }
-
   handleEditTimeSlotModalDelete = (appointmentId) => {
 
     return deleteAppointment(appointmentId)
@@ -98,13 +93,10 @@ class App extends React.Component {
       });
   };
 
-  handleTimeSlotListEdit = (hour) => {
-    this.setState({ editingTimeSlot: hour, error: null });
-  };
-
   render = () => {
 
     let errorMessage = null;
+
     if (this.props.error) {
       errorMessage = (
         <div className="alert alert-danger">
@@ -113,10 +105,10 @@ class App extends React.Component {
       );
     }
 
-    if (this.state.editingTimeSlot) {
+    if (this.props.editingTimeSlot) {
 
       const appointment = this.props.appointments.find(a => {
-        return a.hour === this.state.editingTimeSlot}
+        return a.hour === this.props.editingTimeSlot}
       );
 
       return (
@@ -124,10 +116,10 @@ class App extends React.Component {
           <div className="card-body">
             { errorMessage }
             <EditTimeSlotModal
-              hour={this.state.editingTimeSlot}
+              hour={this.props.editingTimeSlot}
               appointment={appointment}
               onSave={this.handleEditTimeSlotModalSave}
-              onCancel={this.handleEditTimeSlotModalCancel}
+              onCancel={this.props.hideEditAppointmentModal}
               onDelete={this.handleEditTimeSlotModalDelete}
             />
           </div>
@@ -144,7 +136,7 @@ class App extends React.Component {
             startHour={9}
             endHour={17}
             appointments={this.props.appointments}
-            onEdit={this.handleTimeSlotListEdit}
+            onEdit={this.props.showEditAppointmentModal}
           />
         </div>
       </div>
@@ -160,7 +152,14 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = { loadAppointments }
+const mapDispatchToProps = {
+  loadAppointments,
+  createAppointment,
+  deleteAppointment,
+  updateAppointment,
+  showEditAppointmentModal,
+  hideEditAppointmentModal,
+}
 
 export default connect(
   mapStateToProps,
