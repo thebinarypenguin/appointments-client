@@ -1,6 +1,8 @@
-# Appointments
+# Appointments (Client)
 
 A quick and dirty appointment scheduler using React + Redux. (coding exercise)
+
+Depends on https://github.com/thebinarypenguin/appointments-server for the backend.
 
 ## Installation
 
